@@ -1,6 +1,6 @@
 ﻿using EventSourcingOnAzureFunctions.Common.EventSourcing.Exceptions;
 using EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces;
-using Microsoft.Azure.Cosmos.Table;
+using Azure.Data.Tables;
 using System;
 using System.Collections.Generic;
 
@@ -107,7 +107,9 @@ namespace EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.Azur
             }
         }
 
-        // Row key holds the as-of sequence number
+        /// <summary>
+        /// Row key holds the as-of sequence number
+        /// </summary>
         public string RowKey
         {
             get
@@ -120,58 +122,14 @@ namespace EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.Azur
             }
         }
 
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
 
 
         /// <summary>
         /// The special concurrency protection tag used to make sure no update has occured since the last read
         /// </summary>
-        public string ETag { get; set; }
+        public Azure.ETag ETag { get; set; }
 
-        public void ReadEntity(IDictionary<string, EntityProperty> properties,
-                OperationContext operationContext)
-        {
-            if (null != properties)
-            {
-                if (properties.ContainsKey(nameof(DomainName)))
-                {
-                    DomainName = properties[nameof(DomainName)].StringValue;
-                }
-                if (properties.ContainsKey(nameof(EntityTypeName)))
-                {
-                    EntityTypeName = properties[nameof(EntityTypeName)].StringValue;
-                }
-                if (properties.ContainsKey(nameof(InstanceKey)))
-                {
-                    InstanceKey = properties[nameof(InstanceKey)].StringValue;
-                }
-                if (properties.ContainsKey(nameof(WasEverIncluded)))
-                {
-                    WasEverIncluded = properties[nameof(WasEverIncluded)].BooleanValue.GetValueOrDefault(false) ;
-                }
-                if (properties.ContainsKey(nameof(WasEverExcluded)))
-                {
-                    WasEverExcluded = properties[nameof(WasEverExcluded)].BooleanValue.GetValueOrDefault(false);
-                }
-                if (properties.ContainsKey(nameof(CurrentClassification )))
-                {
-                    CurrentClassification = (ClassificationResponse.ClassificationResults) properties[nameof(WasEverExcluded)].Int32Value.GetValueOrDefault(0) ;
-                }
-            }
-        }
-
-        public IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
-        {
-            IDictionary<string, EntityProperty> ret = new Dictionary<string, EntityProperty>();
-            // Add the custom properties here
-            ret.Add(nameof(DomainName), EntityProperty.GeneratePropertyForString(DomainName));
-            ret.Add(nameof(EntityTypeName), EntityProperty.GeneratePropertyForString(EntityTypeName));
-            ret.Add(nameof(InstanceKey), EntityProperty.GeneratePropertyForString(InstanceKey));
-            ret.Add(nameof(WasEverIncluded), EntityProperty.GeneratePropertyForBool(WasEverIncluded));
-            ret.Add(nameof(WasEverExcluded), EntityProperty.GeneratePropertyForBool(WasEverExcluded));
-            ret.Add(nameof(CurrentClassification ), EntityProperty.GeneratePropertyForInt((int)CurrentClassification ));
-            return ret;
-        }
 
     }
 }

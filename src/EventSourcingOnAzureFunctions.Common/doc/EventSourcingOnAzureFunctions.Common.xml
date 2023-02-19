@@ -2383,7 +2383,17 @@
             The value to use for that named parameter for this run
             </param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.EventSourcing.Classification.GetAllInstanceKeys(System.Nullable{System.DateTime})" -->
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Classification.GetAllInstanceKeys(System.Nullable{System.DateTime})">
+            <summary>
+            Get all of the unique instances of this domain/entity type
+            </summary>
+            <param name="asOfDate">
+            (Optional) The date as of which to get all the instance keys
+            </param>
+            <remarks>
+            This is to allow for set-based functionality
+            </remarks>
+        </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Classification.#ctor(EventSourcingOnAzureFunctions.Common.Binding.ClassificationAttribute,EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamSettings,EventSourcingOnAzureFunctions.Common.Notification.INotificationDispatcher,EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationSnapshotReader,EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationSnapshotWriter)">
             <summary>
             Create the projection from the attribute linked to the function parameter
@@ -2850,11 +2860,6 @@
             The stream of data to read events from
             </param>
         </member>
-        <member name="F:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AppendBlob.BlobEventStreamBase.ORPHANS_FOLDER">
-            <summary>
-            The default folder where uncateggorised entities are stored
-            </summary>
-        </member>
         <member name="F:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AppendBlob.BlobEventStreamBase.EVENTSTREAM_FOLDER">
             <summary>
             The default subfolder where the event streams are stored
@@ -2899,23 +2904,6 @@
             </summary>
             <remarks>
             This is similar in concept to FileSystemInfo.Refresh
-            </remarks>
-        </member>
-        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AppendBlob.BlobEventStreamBase.MakeValidStorageFolderName(System.String)">
-            <summary>
-            Turn a name into a valid folder name for azure blob storage
-            </summary>
-            <param name="rawName">
-            The name of the thing we want to turn into a blob storage folder name
-            </param>
-            <returns>
-            A folder name that can be used to locate this object type's event streams
-            </returns>
-            <remarks>
-            Container names must start With a letter Or number, And can contain only letters, numbers, And the dash (-) character.
-            Every dash (-) character must be immediately preceded And followed by a letter Or number; consecutive dashes are Not permitted in container names.
-            All letters in a container name must be lowercase.
-            Container names must be from 3 through 63 characters long.
             </remarks>
         </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AppendBlob.BlobEventStreamReader.Create(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String)">
@@ -2990,6 +2978,11 @@
              Common functionality that both reader and writer use to access any event store based on Azure storage
             </summary>
         </member>
+        <member name="F:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AzureStorageEventStreamBase.ORPHANS_FOLDER">
+            <summary>
+            The default folder where uncateggorised entities are stored
+            </summary>
+        </member>
         <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AzureStorageEventStreamBase.DomainName">
             <summary>
             The domain name in which this event stream is residing
@@ -3004,6 +2997,23 @@
             <summary>
             The name of the default connection string to use for the domain
             </summary>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AzureStorageEventStreamBase.MakeValidStorageFolderName(System.String)">
+            <summary>
+            Turn a name into a valid folder name for azure blob storage
+            </summary>
+            <param name="rawName">
+            The name of the thing we want to turn into a blob storage folder name
+            </param>
+            <returns>
+            A folder name that can be used to locate this object type's event streams
+            </returns>
+            <remarks>
+            Container names must start With a letter Or number, And can contain only letters, numbers, And the dash (-) character.
+            Every dash (-) character must be immediately preceded And followed by a letter Or number; consecutive dashes are Not permitted in container names.
+            All letters in a container name must be lowercase.
+            Container names must be from 3 through 63 characters long.
+            </remarks>
         </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Blob.BlobSnapshotBase.MakeSnapshotFilename(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.ISnapshot)">
             <summary>
@@ -3046,6 +3056,81 @@
             Writer to save projection snapshots in an Azure storage blob
             </summary>
         </member>
+        <member name="T:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEntityIndexCardRecord">
+            <summary>
+            An index card record that is used to tell when a given entity came into being
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEntityIndexCardRecord.DomainName">
+            <summary>
+            The domain in which this event stream is set
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEntityIndexCardRecord.EntityTypeName">
+            <summary>
+            The type of entity for which this event stream pertains
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEntityIndexCardRecord.InstanceKey">
+            <summary>
+            The specific uniquely identitified instance of the entity to which this event stream pertains
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamBase.DomainName">
+            <summary>
+            The domain in which this event stream is set
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamBase.EntityTypeName">
+            <summary>
+            The type of entity for which this event stream pertains
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamBase.InstanceKey">
+            <summary>
+            The specific uniquely identitified instance of the entity to which this event stream pertains
+            </summary>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamBase.StreamAlreadyExists">
+            <summary>
+            Does a stream already exist for this event stream identity
+            </summary>
+            <remarks>
+            We use the existence of the stream footer record as proof of stream existence
+            </remarks>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamBase.StorageConnectionStringSettingName">
+            <summary>
+            The name of the default connection string to use for the domain
+            </summary>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamReader.Create(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String)">
+            <summary>
+            Creates an azure file storage based event stream reader for the given aggregate
+            </summary>
+            <param name="identity">
+            The unique identifier of the event stream to read
+            </param>
+            <param name="connectionStringName">
+            The name of the connection string to use to do the reading from the files
+            </param>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamWriter.DeleteStream">
+            <summary>
+            Delete all the files for a given event stream
+            </summary>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamWriter.#ctor(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String)">
+            <summary>
+            Constructor to create a n Azure files backed writer for a given event stream
+            </summary>
+            <param name="identity">
+            The identity of the entity for which to create an event stream writer
+            </param>
+            <param name="connectionStringName">
+            (Optional) The name of the connection string to use to access the azure storage
+            </param>
+        </member>
         <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableClassificationRecord.DomainName">
             <summary>
             The domain in which this event stream is set
@@ -3082,6 +3167,11 @@
         <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableClassificationRecord.CurrentClassification">
             <summary>
             The classification state as at the point the snapshot is taken
+            </summary>
+        </member>
+        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableClassificationRecord.RowKey">
+            <summary>
+            Row key holds the as-of sequence number
             </summary>
         </member>
         <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableClassificationRecord.ETag">
@@ -3363,16 +3453,6 @@
             Get all the "key" rows in the table
             </summary>
         </member>
-        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamReader.GetDefaultRequestOptions">
-            <summary>
-            Get the standard request options to use when retrieving the event stream data from a table
-            </summary>
-        </member>
-        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamReader.DefaultSharedAccessAccountPolicy">
-            <summary>
-            Policy to allow read-access to the tables
-            </summary>
-        </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamReader.Create(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String)">
             <summary>
             Creates an azure table storage based event stream reader for the given aggregate
@@ -3402,14 +3482,6 @@
             Additional constraint that must be true if the event is to be appended
             </param>
         </member>
-        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamWriter.GetDefaultOperationContext">
-            <summary>
-            Gets the operation context used to write data to the table
-            </summary>
-            <remarks>
-            This adds the correlation identifier to the operation so it can be seen in any tracing operation
-            </remarks>
-        </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamWriter.IncrementSequenceNumber">
             <summary>
             Increment the sequence number for this event stream and return the new number
@@ -3428,11 +3500,6 @@
             <summary>
             Create a query to get the events 
             for an instance key to delete them
-            </summary>
-        </member>
-        <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamWriter.DefaultSharedAccessAccountPolicy">
-            <summary>
-            Policy to allow read/writer access to the storage account the table(s) are in
             </summary>
         </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamWriter.#ctor(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String)">
@@ -3467,6 +3534,30 @@
             </summary>
             <param name="parameterName">
             The name of the parameter to find
+            </param>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.ClassificationProcessor.#ctor(EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.AppendBlob.BlobEventStreamReader)">
+            <summary>
+            Create a classification processor that works over streams based on an append blob
+            </summary>
+            <param name="blobEventStreamReader">
+            The reader that reads events from an append blob
+            </param>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.ClassificationProcessor.#ctor(EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.Table.TableEventStreamReader)">
+            <summary>
+            Create a classification processor that works over streams based on an Azure table
+            </summary>
+            <param name="tableEventStreamReader">
+            The reader that reads events from an Azure table
+            </param>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.ClassificationProcessor.#ctor(EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.AzureStorage.File.FileEventStreamReader)">
+            <summary>
+            Create a classification processor that works over streams based on Azure files
+            </summary>
+            <param name="fileEventStreamReader">
+            The reader that reads events from Azure files
             </param>
         </member>
         <member name="P:EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.EventInstance.EventTypeName">
@@ -3653,8 +3744,28 @@
             If set, only run the classification up until this date/time
             </param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationProcessor.Classify(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassification,System.Nullable{System.DateTime})" -->
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationProcessor.GetAllInstanceKeys(System.Nullable{System.DateTime})" -->
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationProcessor.Classify(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassification,System.Nullable{System.DateTime})">
+            <summary>
+            Run the given classification over the underlying event stream
+            </summary>
+            <param name="classificationToRun">
+            The instance of the classification to run
+            </param>
+            <param name="asOfDate">
+            If set, only run the classification up until this date/time
+            </param>
+        </member>
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationProcessor.GetAllInstanceKeys(System.Nullable{System.DateTime})">
+            <summary>
+            Get all of the unique instances of this domain/entity type
+            </summary>
+            <param name="asOfDate">
+            (Optional) The date as of which to get all the instance keys
+            </param>
+            <remarks>
+            This is to allow for set-based functionality
+            </remarks>    
+        </member>
         <member name="T:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IClassificationSnapshotReader">
             <summary>
             Reader to load snapshots of a classification
@@ -3822,7 +3933,17 @@
             This is typically only used for audit trails as all business functionality should depend on the event data alone
             </returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamReader.GetAllInstanceKeys(System.Nullable{System.DateTime})" -->
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamReader.GetAllInstanceKeys(System.Nullable{System.DateTime})">
+            <summary>
+            Get all of the unique instances of this domain/entity type
+            </summary>
+            <param name="asOfDate">
+            (Optional) The date as of which to get all the instance keys
+            </param>
+            <remarks>
+            This is to allow for set-based functionality
+            </remarks>    
+        </member>
         <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamSettings.LoadFromConfig(System.String)">
             <summary>
             Load the settings from the application configuration
@@ -4049,7 +4170,17 @@
             If set, only run the projection up until this date/time
             </param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IProjectionProcessor.Process``1(``0,System.Nullable{System.DateTime})" -->
+        <member name="M:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IProjectionProcessor.Process``1(``0,System.Nullable{System.DateTime})">
+            <summary>
+            Run the given projection over the underlying event stream
+            </summary>
+            <param name="projectionToRun">
+            The projection to run
+            </param>
+            <param name="asOfDate">
+            If set, only run the projection up until this date/time
+            </param>
+        </member>
         <member name="T:EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IProjectionSnapshotReader">
             <summary>
             Reader to load snapshots of a projection
@@ -4763,7 +4894,7 @@
             The original subject part with dot separators
             </param>
         </member>
-        <member name="M:EventSourcingOnAzureFunctions.Common.Notification.EventGridNotificationDispatcher.MakeTraceParent(System.String,System.String)">
+        <member name="M:EventSourcingOnAzureFunctions.Common.Notification.EventGridNotificationDispatcher.MakeTraceParent(System.Int32,System.Int32)">
             <summary>
             Make a string that can be passed to the W3C Trace header as a trace parent
             </summary>
@@ -4776,17 +4907,6 @@
             <remarks>
             See https://www.w3.org/TR/trace-context/#examples-of-http-traceparent-headers
             </remarks>
-        </member>
-        <member name="M:EventSourcingOnAzureFunctions.Common.Notification.EventGridNotificationDispatcher.StringToByteArray(System.Int32,System.String)">
-            <summary>
-            Turn a string into a byte array to make a correlation/causation ID useful for W3C tracing
-            </summary>
-            <param name="length">
-            The length of array we need
-            </param>
-            <param name="input">
-            The source string we are turning into an array
-            </param>
         </member>
         <member name="T:EventSourcingOnAzureFunctions.Common.Notification.INotificationDispatcher">
             <summary>
@@ -5133,6 +5253,25 @@
             </param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EventSourcingOnAzureFunctions.Common.Notification.QueueNotificationDispatcher.MakeMessageString(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String,System.String,System.Int32,System.Nullable{System.DateTime})" -->
+        <member name="M:EventSourcingOnAzureFunctions.Common.Notification.QueueNotificationDispatcher.MakeMessageString(EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces.IEventStreamIdentity,System.String,System.String,System.Int32,System.Nullable{System.DateTime})">
+            <summary>
+            Turn the properties passed in into a string to be sent via the queue
+            </summary>
+            <param name="targetEntity">
+            What the notification occured for
+            </param>
+            <param name="NotificationType">
+            The type of notification that occured 
+            </param>
+            <param name="asOfSequenceNumber">
+            The sequence number of the event stream for which this notification occured
+            </param>
+            <param name="asOfDate">
+            The as-of date of the event in the event stream for which this notification occured
+            </param>
+            <returns>
+            A notification message less than 64kb long as pipe-separated values
+            </returns>
+        </member>
     </members>
 </doc>

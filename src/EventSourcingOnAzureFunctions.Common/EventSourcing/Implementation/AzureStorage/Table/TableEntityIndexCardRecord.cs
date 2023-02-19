@@ -1,6 +1,6 @@
 ﻿using EventSourcingOnAzureFunctions.Common.EventSourcing.Exceptions;
 using EventSourcingOnAzureFunctions.Common.EventSourcing.Interfaces;
-using Microsoft.Azure.Cosmos.Table;
+using Azure.Data.Tables;
 using System;
 using System.Collections.Generic;
 
@@ -102,43 +102,14 @@ namespace EventSourcingOnAzureFunctions.Common.EventSourcing.Implementation.Azur
         /// <summary>
         /// The time the record was last updated
         /// </summary>
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
 
         /// <summary>
         /// The special concurrency protection tag used to make sure no update has occured since the last read
         /// </summary>
-        public string ETag { get; set; }
+        public Azure.ETag ETag { get; set; }
 
 
-        public void ReadEntity(IDictionary<string, EntityProperty> properties,
-          OperationContext operationContext)
-        {
-            if (null != properties)
-            {
-                if (properties.ContainsKey(nameof(DomainName)))
-                {
-                    DomainName = properties[nameof(DomainName)].StringValue;
-                }
-                if (properties.ContainsKey(nameof(EntityTypeName)))
-                {
-                    EntityTypeName = properties[nameof(EntityTypeName)].StringValue;
-                }
-                if (properties.ContainsKey(nameof(InstanceKey)))
-                {
-                    InstanceKey = properties[nameof(InstanceKey)].StringValue;
-                }
-            }
-        }
-
-
-        public IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
-        {
-            IDictionary<string, EntityProperty> ret = new Dictionary<string, EntityProperty>();
-            // Add the custom properties here
-            ret.Add(nameof(DomainName), EntityProperty.GeneratePropertyForString(DomainName));
-            ret.Add(nameof(EntityTypeName), EntityProperty.GeneratePropertyForString(EntityTypeName));
-            ret.Add(nameof(InstanceKey), EntityProperty.GeneratePropertyForString(InstanceKey));
-            return ret;
-        }
     }
+
 }
